@@ -7,10 +7,13 @@ export default class Search extends Component {
         <input
           className="input-box"
           type="text"
-          value="Enter a Movie Title..."
+          value={this.props.query}
+          onChange={this.props.onQueryChange}
         />
         <div className="btn">
-          <button className="button">Search</button>
+          <button onClick={this.props.onSearch} className="button">
+            Search
+          </button>
         </div>
       </div>
     );

@@ -2,63 +2,31 @@ import React, { Component } from "react";
 import Search from "./Search.js";
 import Results from "./Results.js";
 import "../App.css";
+// import { queryTVMazeAPI } from "../util.js";
+import axios from "axios";
 
 export default class HomePage extends Component {
   state = {
-    movies: [
-      {
-        name: "The Office",
-        image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/85/213184.jpg"
-      },
-      {
-        name: "Radiant Office",
-        image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/101/254702.jpg"
-      },
-      {
-        name: "The Office",
-        image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/93/234802.jpg"
-      },
-      {
-        name: "Mr. Box Office",
-        image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/97/244942.jpg"
-      },
-      {
-        name: "The Queen of Office",
-        image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/58/146476.jpg"
-      },
-      {
-        name: "No Offence",
-        image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/48/121682.jpg"
-      },
-      {
-        name: "Oficer",
-        image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/29/73047.jpg"
-      },
-      {
-        name: "Trzeci oficer",
-        image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/29/73053.jpg"
-      },
-      {
-        name: "Line Offline: Salaryman",
-        image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/57/143508.jpg"
-      },
-      {
-        name: "Utenai Keikan",
-        image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/42/106093.jpg"
-      }
-    ],
-    query: [{}],
+    movies: [],
+    query: "",
     hasSearched: []
+  };
+
+  onQueryChange = event => {
+    const value = event.target.value;
+    this.setState({ query: value });
+  };
+
+  onSearch = () => {
+    const url = `http://api.tvmaze.com/search/shows?q=${this.state.query}`;
+    // use above so that you dont have to import util.js file
+    // queryTVMazeAPI(this.state.query);
+    //  .then((res) => {
+    // this.setState({movies: res.data})
+    // })
+    axios.get(url).then(res => {
+      this.setState({ movies: res.data });
+    });
   };
 
   render() {
@@ -66,8 +34,13 @@ export default class HomePage extends Component {
       <div className="home">
         <div className="home-description">
           <h1>TVMaze React</h1>
-          <Search />
-          <Results />
+          <Search
+            query={this.state.query}
+            onQueryChange={this.onQueryChange}
+            onSearch={this.onSearch}
+          />
+          <Results movies={this.state.movies} />
+          {/* created prop up above */}
         </div>
       </div>
     );
